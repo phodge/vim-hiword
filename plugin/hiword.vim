@@ -1,3 +1,6 @@
+if ! has('liveupdate')
+  finish
+endif
 com! -nargs=+ -bar Hiword call <SID>AddWord(<f-args>)
 com! -nargs=0 -bar HiwordPoll call <SID>PollAll()
 
