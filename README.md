@@ -3,7 +3,7 @@ Hiword
 
 This is an experimental plugin to test the liveupdate feature of neovim.
 
-Use it like this:
+Install with your preferred plugin manager, and then drop something like this in your `.vimrc`:
 
     au! VimEnter * if exists(':Hiword') | call <SID>Hiwords() | endif
     fun! <SID>Hiwords()
