@@ -71,7 +71,9 @@ def handle_request(nvim, name, args):
         assert len(args) == 1
         bufnr = args[0]
         buffer = nvim.buffers[bufnr]
-        if not buffer.api.live_updates(True):
+        try:
+            buffer.api.live_updates(True)
+        except:
             raise Exception("Couldn't turn on live updates for buffer %d" % bufnr)
         BUFFERS[bufnr] = BufferInfo(buffer, bufnr)
         return

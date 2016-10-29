@@ -6,7 +6,7 @@ com! -nargs=0 -bar HiwordPoll call <SID>PollAll()
 
 aug Hiword
 aug end
-au! BufRead * call <SID>RegisterMe()
+au! BufWinEnter * call <SID>RegisterMe()
 
 let s:pyscript = expand('<sfile>:p:h:h').'/hiword.py'
 
