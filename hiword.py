@@ -112,7 +112,7 @@ def handle_notification(nvim, name, args):
                 buffer = BUFFERS[bufnr]
             except:
                 return
-            if not buffer.api.live_updates(True):
+            if not buffer.nbuf.api.live_updates(True):
                 BUFFERS.pop(bufnr)
             return
 
