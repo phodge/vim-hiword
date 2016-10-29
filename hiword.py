@@ -70,8 +70,10 @@ def handle_request(nvim, name, args):
     if name == 'AddBuffer':
         assert len(args) == 1
         bufnr = args[0]
-        if not nvim.buffers[bufnr].api.live_updates(True):
+        buffer = nvim.buffers[bufnr]
+        if not buffer.api.live_updates(True):
             raise Exception("Couldn't turn on live updates for buffer %d" % bufnr)
+        BUFFERS[bufnr] = BufferInfo(buffer, bufnr)
         return
 
     raise Exception("unexpected request {!r}: {!r}".format(name, args))
