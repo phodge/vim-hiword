@@ -84,7 +84,8 @@ def handle_request(nvim, name, args):
 def handle_notification(nvim, name, args):
     try:
         if name == 'LiveUpdateStart':
-            bufnr, lines, more = args
+            buf, lines, more = args
+            bufnr = buf.number
             assert bufnr in BUFFERS
             info = BUFFERS[bufnr]
             assert not info.locked
@@ -96,11 +97,12 @@ def handle_notification(nvim, name, args):
             return
 
         if name == 'LiveUpdate':
-            bufnr, firstline, numreplaced, linedata = args
+            buf, firstline, numreplaced, linedata = args
+            bufnr = buf.number
             info = BUFFERS[bufnr]
-            # remove existing highlights on the lines getting replaced
-            if numreplaced:
-                removehighlights(info, firstline, numreplaced)
+            # remove existing highlights on the lines that were changed
+            if numreplaced and len(linedata):
+                removehighlights(info, firstline, len(linedata))
             # swap in the new lines
             info.lines[firstline:firstline+numreplaced] = linedata
             if len(linedata):
@@ -108,7 +110,8 @@ def handle_notification(nvim, name, args):
             return
 
         if name == 'LiveUpdateEnd':
-            bufnr = args[0]
+            buf = args[0]
+            bufnr = buf.number
             # try and re-add the live updates
             try:
                 buffer = BUFFERS[bufnr]
