@@ -1,4 +1,20 @@
-if ! has('liveupdate')
+" we must have neovim's api_info() function to get started
+if ! exists('*api_info')
+  finish
+endif
+
+" check to see if the liveupdate feature is available
+if ! exists('s:has_liveupdate')
+  let s:has_liveupdate = 0
+  for s:func in api_info()["functions"]
+    if get(s:func, "name") == "nvim_buf_live_updates"
+      let s:has_liveupdate = 1
+      break
+    endif
+  endfor
+endif
+
+if ! s:has_liveupdate
   finish
 endif
 com! -nargs=+ -bar Hiword call <SID>AddWord(<f-args>)
@@ -18,7 +34,6 @@ fun! <SID>AddWord(hlgroup, word)
   if len(get(s:helpers, a:word, []))
     " kill the old job
     let l:oldjob = s:helpers[a:word][0]
-    call jobclose(l:oldjob)
     call jobstop(l:oldjob)
     call remove(s:helpers, a:word)
   endif
