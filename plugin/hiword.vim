@@ -19,6 +19,7 @@ if ! s:has_liveupdate
 endif
 com! -nargs=+ -bar Hiword call <SID>AddWord(<f-args>)
 com! -nargs=0 -bar HiwordPoll call <SID>PollAll()
+com! -nargs=0 -bar HiwordKill call <SID>KillAll()
 
 aug Hiword
 aug end
@@ -84,5 +85,14 @@ endfun
 fun! <SID>RegisterMe()
   for [l:helper, l:hlgroup] in values(s:helpers)
     call rpcrequest(l:helper, 'AddBuffer', bufnr(""))
+  endfor
+endfun
+
+fun! <SID>KillAll()
+  " clean up all helpers
+  for l:word in keys(s:helpers)
+    let [l:helper, l:hlgroup] = s:helpers[l:word]
+    call remove(s:helpers, l:word)
+    call jobstop(l:helper)
   endfor
 endfun
